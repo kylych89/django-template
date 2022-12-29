@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Base</title>
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+</head>
+<body>
+<div class="Header">
+    {% block Header %}
+    <h1>Header</h1>
+    {% endblock Header %}
+
+</div>
+
+<div class="Menu">
+    {% block Menu %}
+    <h1>Menu</h1>
+
+    <div class="navbar">
+        <a href="{% url 'main:index' %}">Главная</a>
+        <div class="dropdown">
+            <button class="dropbtn"> Новости
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="https://m.akipress.org/kg//">akipress</a>
+                <a href="https://sputnik.kg/">Sputnik</a>
+                <a href="https://knews.kg/">knews</a>
+                <a href="https://kloop.kg/">kloop</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn"> Райондор
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="{% url 'main:sverdlov' %}">Свердлов</a>
+                <a href="{% url 'main:lenin' %}">Ленин</a>
+                <a href="{% url 'main:oktyabr' %}">Октябрь</a>
+                <a href="{% url 'main:pervomay' %}">Первомайский</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn"> Область
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="{% url 'main:chui' %}">Чуйская область</a>
+                <a href="{% url 'main:talas' %}">Таласская область</a>
+                <a href="{% url 'main:yssykkol' %}">Иссык-Кульская область</a>
+                <a href="{% url 'main:naryn' %}">Нарынская область</a>
+                <a href="{% url 'main:osh' %}">Ошская область</a>
+                <a href="{% url 'main:jalalabad' %}">Джалал-Абадская область</a>
+                <a href="{% url 'main:batken' %}">Баткенская область</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn"> Вход
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="{% url 'main:enter' %}">Войти</a>
+                <a href="{% url 'main:register' %}">Зарегистрироваться</a>
+            </div>
+        </div>
+    </div>
+    {% endblock Menu %}
+</div>
+
+<div class="Content">
+    {% block Content %}
+    <h1>Content</h1>
+
+    <!--Contact form-->
+    <div class="container p-5">
+        <h1>Register</h1>
+        <h4>Contact us directly if you have any questions</h4>
+        <p>
+            Please write your name, email address and a message below if you have any questions.
+            One of our staff members will be happy to contact you directly and answer your questions as soon as
+            possible.
+        </p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-6 col-md-12">
+                    {{form.username}}
+                </div>
+                <div class="col-lg-6 col-md-12">
+                    {{form.email}}
+                </div>
+            </div>
+            <div class="row">
+                {{form.password1}}
+            </div>
+            <div class="row">
+                {{form.password2}}
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    {% endblock Content %}
+</div>
+
+<div class="Footer">
+    {% block Footer %}
+    <h1>Footer</h1>
+    {% endblock Footer %}
+</div>
+
+
+</body>
+</html>
