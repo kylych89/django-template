@@ -1,7 +1,10 @@
-from django.shortcuts import render, redirect
-from .forms import NewUserForm
-from django.contrib.auth import login
 from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import render, redirect
+from .forms import ContactForm
+from django.contrib.auth import login, authenticate
+
+from .models import User
 
 
 def indexView(request):
@@ -13,22 +16,43 @@ def indexView(request):
     return render(request, 'main/index.html', context)
 
 
-def enterView(request):
-    return render(request, 'main/enter.html')
+def loginView(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"You are now logged in as {username}.")
+                return redirect("main:index")
+            else:
+                messages.error(request, "Invalid username or password.")
+        else:
+            messages.error(request, "Invalid username or password.")
+    form = AuthenticationForm()
+    return render(request, "main/login.html", {"form": form})
 
 
 def registerView(request):
     if request.method == 'POST':
-        form = NewUserForm(request.POST)
+        form = ContactForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, 'Welcome brat')
-            return redirect('main/register.html', {'form': form})
-        messages.error(request, 'Sorry brat')
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            email = form.cleaned_data['email']
 
-    form = NewUserForm()
-    return render(request, 'main/register.html', {'form': form})
+            User.objects.create(username=username, password=password, email=email, ).save()
+        return redirect('main:index')
+
+    else:
+        form = ContactForm()
+
+        context = {
+            'form': form
+        }
+    return render(request, 'main/register.html', context)
 
 
 def sverdlovView(request):
@@ -176,4 +200,3 @@ def batkenView(request):
         'info': info,
     }
     return render(request, 'main/batken.html', context)
-

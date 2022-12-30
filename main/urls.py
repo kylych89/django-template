@@ -11,7 +11,7 @@ from .views import (indexView,
                     oshView,
                     jalalabadView,
                     batkenView,
-                    enterView,
+                    loginView,
                     registerView)
 
 app_name = 'main'
@@ -29,8 +29,8 @@ urlpatterns = [
     path('osh/', oshView, name='osh'),
     path('jalalabad/', jalalabadView, name='jalalabad'),
     path('batken/', batkenView, name='batken'),
-    path('enter/', enterView, name='enter'),
     path('register/', registerView, name='register'),
+    path('login/', loginView, name='login'),
 ]
 
 
