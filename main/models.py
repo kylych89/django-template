@@ -12,3 +12,11 @@ class User(models.Model):
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
+
+
+class Regions(models.Model):
+    name = models.CharField(max_length=60)
+    info = models.TextField()
+
+    def __str__(self):
+        return self.name
