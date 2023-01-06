@@ -1,19 +1,23 @@
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import render, redirect
-from .forms import ContactForm
+from django.shortcuts import render, redirect, HttpResponse
+from .forms import ContactForm, CreateRegionForm, CreateAreasForm
 from django.contrib.auth import login, authenticate
 
 from .models import User, Regions, Areas
 
 
-def indexView(request):
+def baseView(request):
     info = 'Главная страница'
+    regions = Regions.objects.all()
+    areas = Areas.objects.all()
 
     context = {
         'info': info,
+        'regions': regions,
+        'areas': areas,
     }
-    return render(request, 'main/index.html', context)
+    return render(request, 'base.html', context)
 
 
 def loginView(request):
@@ -32,7 +36,7 @@ def loginView(request):
         else:
             messages.error(request, "Invalid username or password.")
     form = AuthenticationForm()
-    return render(request, "main/login.html", {"form": form})
+    return render(request, "main/authenticates/login.html", {"form": form})
 
 
 def registerView(request):
@@ -52,136 +56,107 @@ def registerView(request):
         context = {
             'form': form
         }
-    return render(request, 'main/register.html', context)
+    return render(request, 'main/authenticates/register.html', context)
 
 
-def sverdlovView(request):
-    sverdlov = Regions.objects.get(id=1)
-    name = sverdlov.name
-    info = sverdlov.info
+def createRegionsView(request):
+    if request.method == 'POST':
+        form = CreateRegionForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('main:base')
+        else:
+            return HttpResponse('ERROR')
+    form = CreateRegionForm
+    context = {
+        'form': form
+    }
+    return render(request, 'main/regions/create_region.html', context)
+
+
+def regionsView(request, pk):
+    regions = Regions.objects.all()
+    region = Regions.objects.get(id=pk)
+    areas = Areas.objects.all()
 
     context = {
-        'name': name,
-        'info': info,
+        'region': region,
+        'regions': regions,
+        'areas': areas,
     }
 
-    return render(request, 'main/sverdlov.html', context)
+    return render(request, 'main/regions/regions_view.html', context)
 
 
-def leninView(request):
-    lenin = Regions.objects.get(id=2)
-    name = lenin.name
-    info = lenin.info
+def updateRegionsView(request, pk):
+    region = Regions.objects.get(id=pk)
+    if request.method == 'POST':
+        form = CreateRegionForm(request.POST, instance=region)
+        if form.is_valid():
+            form.save()
+            return redirect('main:base')
+
+        return HttpResponse('Invalid data')
+    form = CreateRegionForm(instance=region)
+    conteext = {
+        'form': form
+    }
+    return render(request, 'main/regions/create_region.html', conteext)
+
+
+def deleteRegionsView(request, pk):
+    region = Regions.objects.get(id=pk)
+    region.delete()
+    return redirect('main:base')
+
+
+def createAreasView(request):
+    if request.method == 'POST':
+        form = CreateAreasForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('main:base')
+        else:
+            return HttpResponse('ERROR')
+    form = CreateAreasForm
+    context = {
+        'form': form
+    }
+    return render(request, 'main/areas/create_areas.html', context)
+
+
+def areasesView(request, pk):
+    areases = Areas.objects.all()
+    areas = Areas.objects.get(id=pk)
+    regions = Regions.objects.all()
 
     context = {
-        'name': name,
-        'info': info,
+        'areas': areas,
+        'areases': areases,
+        'regions': regions,
     }
-    return render(request, 'main/lenin.html', context)
+    return render(request, 'main/areas/areases_view.html', context)
 
 
-def oktyabrView(request):
-    oktyabr = Regions.objects.get(id=3)
-    name = oktyabr.name
-    info = oktyabr.info
+def updateAreasView(request, pk):
+    area = Areas.objects.get(id=pk)
+    if request.method == 'POST':
+        form = CreateAreasForm(request.POST, instance=area)
+        if form.is_valid():
+            form.save()
+            return redirect('main:base')
+        return HttpResponse('Invalid data')
+
+    form = CreateAreasForm(instance=area)
 
     context = {
-        'name': name,
-        'info': info,
+        'form': form
     }
-    return render(request, 'main/oktyabr.html', context)
+
+    return render(request, 'main/areas/create_areas.html', context)
 
 
-def pervomayView(request):
-    pervomay = Regions.objects.get(id=4)
-    name = pervomay.name
-    info = pervomay.info
-
-    context = {
-        'name': name,
-        'info': info,
-    }
-    return render(request, 'main/pervomay.html', context)
-
-
-def chuiView(request):
-    chui = Areas.objects.get(id=1)
-    name = chui.name
-    info = chui.info
-    context = {
-        'name': name,
-        'info': info,
-    }
-    return render(request, 'main/chui.html', context)
-
-
-def talasView(request):
-    talas = Areas.objects.get(id=2)
-    name = talas.name
-    info = talas.info
-
-    context = {
-        'name': name,
-        'info': info,
-    }
-    return render(request, 'main/talas.html', context)
-
-
-def yssykkolView(request):
-    yssykkol = Areas.objects.get(id=3)
-    name = yssykkol.name
-    info = yssykkol.info
-
-    context = {
-        'name': name,
-        'info': info,
-    }
-    return render(request, 'main/yssykkol.html', context)
-
-
-def narynView(request):
-    naryn = Areas.objects.get(id=4)
-    name = naryn.name
-    info = naryn.info
-
-    context = {
-        'name': name,
-        'info': info,
-    }
-    return render(request, 'main/naryn.html', context)
-
-
-def oshView(request):
-    osh = Areas.objects.get(id=5)
-    name = osh.name
-    info = osh.info
-
-    context = {
-        'name': name,
-        'info': info,
-    }
-    return render(request, 'main/osh.html', context)
-
-
-def jalalabadView(request):
-    jalalabad = Areas.objects.get(id=6)
-    name = jalalabad.name
-    info = jalalabad.info
-
-    context = {
-        'name': name,
-        'info': info,
-    }
-    return render(request, 'main/jalalabad.html', context)
-
-
-def batkenView(request):
-    batken = Areas.objects.get(id=7)
-    name = batken.name
-    info = batken.info
-
-    context = {
-        'name': name,
-        'info': info,
-    }
-    return render(request, 'main/batken.html', context)
+def deleteAreasView(request, pk):
+    area = Areas.objects.get(id=pk)
+    area.delete()
+    return redirect('main:base')

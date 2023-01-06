@@ -1,18 +1,16 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Base</title>
-    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
-</head>
-<body>
-<div class="Header">
-    {% block Header %}
-    <h1>Header</h1>
-    {% endblock Header %}
+{% extends "base.html" %}
 
-</div>
+{% block Content %}
+<h1>{{areas.name}}</h1>
+<p>{{areas.info}}</p>
+<a href="{% url 'main:update_areas' areas.id %}">
+    <button>Update</button>
+</a>
+<a href="{% url 'main:delete_areas' areas.id %}">
+    <button>Delete</button>
+</a>
+{% endblock %}
+
 
 <div class="Menu">
     {% block Menu %}
@@ -47,7 +45,7 @@
             </button>
             <div class="dropdown-content">
                 <a href="{% url 'main:create_areas' %}">Область кошуу</a>
-                {% for area in areas %}
+                {% for area in areases %}
                 <a href="{% url 'main:areas' area.id %}">{{area.name}}</a>
                 {% endfor %}
             </div>
@@ -64,18 +62,3 @@
     </div>
     {% endblock %}
 </div>
-
-<div class="Content">
-    {% block Content %}
-    <h1>Главная страница</h1>
-    <p>{{info}}</p>
-    {% endblock Content %}
-</div>
-
-<div class="Footer">
-    {% block Footer %}
-    <h1>Footer</h1>
-    {% endblock Footer %}
-</div>
-</body>
-</html>

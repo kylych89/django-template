@@ -1,18 +1,16 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Base</title>
-    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
-</head>
-<body>
-<div class="Header">
-    {% block Header %}
-    <h1>Header</h1>
-    {% endblock Header %}
+{% extends "base.html" %}
 
-</div>
+{% block Content %}
+<h1>{{region.name}}</h1>
+<p>{{region.info}}</p>
+<a href="{% url 'main:update_region' region.id %}">
+    <button>Update</button>
+</a>
+<a href="{% url 'main:delete_region' region.id %}">
+    <button>Delete</button>
+</a>
+{% endblock %}
+
 
 <div class="Menu">
     {% block Menu %}
@@ -64,18 +62,3 @@
     </div>
     {% endblock %}
 </div>
-
-<div class="Content">
-    {% block Content %}
-    <h1>Главная страница</h1>
-    <p>{{info}}</p>
-    {% endblock Content %}
-</div>
-
-<div class="Footer">
-    {% block Footer %}
-    <h1>Footer</h1>
-    {% endblock Footer %}
-</div>
-</body>
-</html>

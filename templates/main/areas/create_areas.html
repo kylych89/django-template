@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block Content %}
+<form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button>Сактоо</button>
+</form>
+{% endblock %}
